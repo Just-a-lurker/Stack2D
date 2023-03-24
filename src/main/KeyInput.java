@@ -18,9 +18,6 @@ public class KeyInput implements KeyListener {
 		return keys[key];
 	}
 	
-	public static boolean keyUp(int key) {
-		return !keys[key] && lastKeys[key];
-	}
 	
 	public static boolean keyDown(int key) {
 		return keys[key] && !lastKeys[key];

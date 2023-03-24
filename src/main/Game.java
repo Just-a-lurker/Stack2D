@@ -66,6 +66,9 @@ public class Game {
 			}
 			return;
 		}
+		
+		if(KeyInput.keyDown(KeyEvent.VK_R)) start();
+		
 		for(int i=0;i< objects.size();i++) {
 			objects.get(i).update();
 			if(objects.get(i).getY() + Stack.HEIGHT >= Stack.HEIGHT * Stack.scale) objects.remove(i);
