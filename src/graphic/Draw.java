@@ -1,4 +1,4 @@
-package sprite;
+package graphic;
 
 import java.awt.Color;
 
@@ -9,9 +9,13 @@ public class Draw {
 
 	private static int width = Stack.WIDTH, height = Stack.HEIGHT;
 	
+	private Game game;
+	
 	private int[] pixels = new int[width*height];
 	
-	
+	public Draw(Game game) {
+		this.game = game;
+	}
 	
 	public int[] getPixels() {
 		return pixels;
@@ -23,12 +27,12 @@ public class Draw {
 
 	public void drawBackGround() {
 		for(int i=0;i<pixels.length;i++) {
-			if(!Game.gameOver) pixels[i] = 0xfff4f4f4;
+			if(!game.isGameOver()) pixels[i] = 0xfff4f4f4;
 			else pixels[i] = 0x0;
 		}
 	}
 	
-	public void drawSprite(Sprite s, int xp, int yp) {
+	public void drawObject(Object s, int xp, int yp) {
 		if(xp< -s.getWidth() || yp< -s.getHeight() || xp >=width || yp>= height) return;
 
 		for(int y=0;y<s.getHeight();y++) {

@@ -20,7 +20,7 @@ public class Stack extends Canvas implements Runnable {
 	Thread thread;
 	
 	private static BufferedImage img = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
-	public static int[] pixels = ((DataBufferInt) img.getRaster().getDataBuffer()).getData();
+	//public static int[] pixels = ((DataBufferInt) img.getRaster().getDataBuffer()).getData();
 	
 	public Stack() {
 		setPreferredSize(new Dimension((int) (WIDTH * scale), (int) (HEIGHT * scale)));
@@ -31,10 +31,10 @@ public class Stack extends Canvas implements Runnable {
 	}
 	
 	public void start() {
-		game.sound = new Thread(game);
-		game.sound.start();
 		thread = new Thread(this);
 		thread.start();
+		game.setSound(new Thread(game));
+		game.getSound().start();
 	}
 	
 	@Override

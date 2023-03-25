@@ -13,9 +13,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import graphic.Draw;
+import graphic.Object;
 import objects.GameObject;
-import sprite.Draw;
-import sprite.Sprite;
 
 
 public class Game implements Runnable{
@@ -23,15 +23,15 @@ public class Game implements Runnable{
 	Draw draw;
 	SaveManager save;
 	Random rand = new Random();
-	public Thread sound;
+	private Thread sound;
 	
 	private AudioClip place;
 	
 	public static List<GameObject> objects;
-	boolean spawnNew = false;
-	public static boolean animate, animating,gameOver;
+	boolean spawnAnother = false;
+	private boolean animate, animating,gameOver;
 	
-	public Sprite objectSprite;
+	public Object objectSprite;
 	
 	GameConfig config = new GameConfig();
 	public static int bestScore = 0, score;
@@ -40,6 +40,56 @@ public class Game implements Runnable{
 	public Draw getDraw() {
 		return draw;
 	}
+	
+	
+
+	public Thread getSound() {
+		return sound;
+	}
+
+
+
+	public void setSound(Thread sound) {
+		this.sound = sound;
+	}
+
+
+
+	public boolean isAnimate() {
+		return animate;
+	}
+
+
+
+	public void setAnimate(boolean animate) {
+		this.animate = animate;
+	}
+
+
+
+	public boolean isAnimating() {
+		return animating;
+	}
+
+
+
+	public void setAnimating(boolean animating) {
+		this.animating = animating;
+	}
+
+
+
+	public boolean isGameOver() {
+		return gameOver;
+	}
+
+
+
+	public void setGameOver(boolean gameOver) {
+		this.gameOver = gameOver;
+	}
+
+
 
 	public Game() {
 		try {
@@ -51,16 +101,16 @@ public class Game implements Runnable{
 		config.loadConfig("config.xml");
 		start();
 		save.load();
-		draw = new Draw();
+		draw = new Draw(this);
 	}
 	
 	public void start() {
-		objectSprite = new Sprite(100, 29, 0);
+		objectSprite = new Object(100, 29, 0);
 		objects = new ArrayList<GameObject>();
 		objects.add(new GameObject(Stack.WIDTH / 2 - objectSprite.getWidth()/2, Stack.HEIGHT - 30, objectSprite, false, this));
 		objects.add(new GameObject(Stack.WIDTH / 2 - objectSprite.getWidth()/2, Stack.HEIGHT - 30*2, objectSprite, false, this));
 		objects.add(new GameObject(Stack.WIDTH / 2 - objectSprite.getWidth()/2, Stack.HEIGHT - 30*3, objectSprite, false, this));
-		spawnNew = true;
+		spawnAnother = true;
 		gameOver = false;
 		animate = false;
 		animating = false;
@@ -88,12 +138,12 @@ public class Game implements Runnable{
 		}
 		animate = false;
 		
-		if(spawnNew) {
+		if(spawnAnother) {
 			if(!animating) {
 				score++;
-				objectSprite = new Sprite(objects.get(objects.size()-1).getWidth(), 29, 0);
+				objectSprite = new Object(objects.get(objects.size()-1).getWidth(), 29, 0);
 				objects.add(new GameObject(rand.nextInt(Stack.WIDTH) - objectSprite.getWidth(), Stack.HEIGHT - 30*4, objectSprite, true, this));
-				spawnNew = false;
+				spawnAnother = false;
 			}
 			else {
 				boolean endOfAnim = true;
@@ -104,15 +154,15 @@ public class Game implements Runnable{
 				}
 				if(endOfAnim) animating = false;
 			}
+			save.save();
 		}
 		else {
 			if(!objects.get(objects.size() - 1).isMoving()) {
-				spawnNew = true;
+				spawnAnother = true;
 				animate = true;
 				animating = true;
 			}
 		}
-		save.save();
 	}
 	
 	public void draw() {
@@ -134,15 +184,19 @@ public class Game implements Runnable{
 			int w = g2.getFontMetrics().stringWidth(s)/2;
 			String best = "Best score : " + Game.bestScore;
 			int bw = g2.getFontMetrics().stringWidth(best)/2;
+			String go = "Game Over";
+			int gow = g2.getFontMetrics().stringWidth(go)/2;
+			String r = "Press r to restart";
+			int rw = g2.getFontMetrics().stringWidth(r)/2;
 		if(!gameOver) {
 			g2.drawString(s, Stack.WIDTH * Stack.scale / 2 - w, 80);
-			g2.drawString(best, Stack.WIDTH * Stack.scale / 2 - bw, 100);
 		}
 		else {
 			g2.setColor(Color.white);
+			g2.drawString(go, Stack.WIDTH * Stack.scale / 2 - gow, Stack.HEIGHT*Stack.scale / 2 - 20);
 			g2.drawString(s, Stack.WIDTH * Stack.scale / 2 - w, Stack.HEIGHT*Stack.scale / 2);
 			g2.drawString(best, Stack.WIDTH * Stack.scale / 2 - bw, Stack.HEIGHT*Stack.scale / 2 + 20);
-			g2.drawString("Press r to restart", Stack.WIDTH * Stack.scale / 2 - bw, Stack.HEIGHT*Stack.scale / 2 + 40);
+			g2.drawString(r, Stack.WIDTH * Stack.scale / 2 - rw, Stack.HEIGHT*Stack.scale / 2 + 40);
 		}
 		
 	}
@@ -150,14 +204,15 @@ public class Game implements Runnable{
 	@Override
 	public void run() {
 		while(sound!=null) {
-			Thread.yield();
+			if(KeyInput.keyDown(KeyEvent.VK_SPACE) && !gameOver && !animating) place.play();
 //			try {
 //				Thread.sleep(0);
 //			} catch (InterruptedException e) {
 //				// TODO Auto-generated catch block
 //				e.printStackTrace();
 //			}
-			if(KeyInput.keyDown(KeyEvent.VK_SPACE) && !gameOver && !animating) place.play();
+		Thread.yield();
+			
 		}
 		}
 }

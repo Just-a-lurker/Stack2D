@@ -1,6 +1,6 @@
-package sprite;
+package graphic;
 
-public class Sprite {
+public class Object {
 	private int width,height;
 	private int[] pixels;
 	
@@ -36,7 +36,7 @@ public class Sprite {
 	}
 
 
-	public Sprite(int width, int height, int color) {
+	public Object(int width, int height, int color) {
 		this.width = width;
 		this.height = height;
 		pixels = new int[width*height];

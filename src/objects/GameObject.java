@@ -7,16 +7,15 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Random;
 
-
+import graphic.Object;
 import main.Game;
 import main.KeyInput;
 import main.Stack;
-import sprite.Sprite;
 
 public class GameObject{
 	private float x,y, newY;
 	private int width, height;
-	Sprite sprite;
+	Object object;
 	Game game;
 	private boolean moving, animate = false;
 	private double speedX = 1 , maxSpeedX = 3;
@@ -24,14 +23,14 @@ public class GameObject{
 	Random rand = new Random();
 
 	@SuppressWarnings("deprecation")
-	public GameObject(float x, float y, Sprite sprite, boolean moving, Game game) {
+	public GameObject(float x, float y, Object object, boolean moving, Game game) {
 		this.x = x;
 		this.y = y;
 		this.newY = y;
-		this.width = sprite.getWidth();
-		this.height = sprite.getHeight();
+		this.width = object.getWidth();
+		this.height = object.getHeight();
 		this.moving = moving;
-		this.sprite = sprite;
+		this.object = object;
 		this.game = game;
 		this.speedX = rand.nextDouble() * (maxSpeedX - 1) + 1;
 		if(rand.nextInt(2) == 0) this.speedX *= -1;
@@ -94,7 +93,7 @@ public class GameObject{
 
 
 	public void setWidth(int width) {
-		this.sprite = new Sprite(width, height, 0);
+		this.object = new Object(width, height, 0);
 		this.width = width;
 	}
 	
@@ -116,13 +115,13 @@ public class GameObject{
 				 int prevWidth = Game.objects.get(Game.objects.size() - 2).width;
 				 int newWidth = (int) ((prevWidth - Math.abs(Stack.WIDTH / 2 - (x + width / 2))));
 				 if(newWidth < 0) {
-					 Game.gameOver = true;
+					 game.setGameOver(true);
 					 return;
 				 }
 				 setWidth(newWidth);
 			 }
 		}
-		if(Game.animate) {
+		if(game.isAnimate()) {
 			this.animate = true;
 			newY += height + 1;
 			x = Math.round(x);
@@ -146,6 +145,6 @@ public class GameObject{
 	}
 
 public void draw() {
-	game.getDraw().drawSprite(sprite, (int) x, (int ) y);
+	game.getDraw().drawObject(object, (int) x, (int ) y);
 }
 }

@@ -8,8 +8,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import graphic.Object;
 import objects.GameObject;
-import sprite.Sprite;
 
 public class SaveManager {
 	float[] saveInfo =new float [10];
@@ -35,7 +35,7 @@ public class SaveManager {
 		try {
 			oF = new File(path);
 			oBR = new BufferedWriter(new FileWriter(oF));
-			if(Game.gameOver) {
+			if(game.isGameOver()) {
 				return;
 			}
 			oBR.write(Integer.toString(Game.score) + "\n");
@@ -62,7 +62,7 @@ public class SaveManager {
 			String str[] = line.split(" "); 
 			Game.objects = new ArrayList<GameObject>();
 			for(int i=0;i<str.length;i++) {
-				Game.objects.add(new GameObject(Stack.WIDTH / 2 - game.objectSprite.getWidth()/2, Stack.HEIGHT - 30*(i+1), new Sprite((int) Float.parseFloat(str[i]), 29, 0), false, game));
+				Game.objects.add(new GameObject(Stack.WIDTH / 2 - game.objectSprite.getWidth()/2, Stack.HEIGHT - 30*(i+1), new Object((int) Float.parseFloat(str[i]), 29, 0), false, game));
 				while(Game.objects.get(i).getX() + Game.objects.get(i).getWidth()/2 != Stack.WIDTH/2) {
 					if(Game.objects.get(i).getX() + Game.objects.get(i).getWidth()/2 / 2 < Stack.WIDTH/2) {
 						Game.objects.get(i).setX(Game.objects.get(i).getX() + 1);
