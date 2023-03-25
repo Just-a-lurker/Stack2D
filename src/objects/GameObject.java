@@ -13,13 +13,11 @@ import main.KeyInput;
 import main.Stack;
 import sprite.Sprite;
 
-public class GameObject implements Runnable{
+public class GameObject{
 	private float x,y, newY;
 	private int width, height;
 	Sprite sprite;
 	Game game;
-	Thread sound;
-	private AudioClip place;
 	private boolean moving, animate = false;
 	private double speedX = 1 , maxSpeedX = 3;
 	
@@ -35,12 +33,6 @@ public class GameObject implements Runnable{
 		this.moving = moving;
 		this.sprite = sprite;
 		this.game = game;
-		sound = new Thread();
-		try {
-			place = Applet.newAudioClip(new URL("file","","data/place.wav"));
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		}
 		this.speedX = rand.nextDouble() * (maxSpeedX - 1) + 1;
 		if(rand.nextInt(2) == 0) this.speedX *= -1;
 	}
@@ -121,7 +113,6 @@ public class GameObject implements Runnable{
 			 
 			 if(KeyInput.keyDown(KeyEvent.VK_SPACE)) {
 				 this.moving = false;
-				 place.play();
 				 int prevWidth = Game.objects.get(Game.objects.size() - 2).width;
 				 int newWidth = (int) ((prevWidth - Math.abs(Stack.WIDTH / 2 - (x + width / 2))));
 				 if(newWidth < 0) {
@@ -156,15 +147,5 @@ public class GameObject implements Runnable{
 
 public void draw() {
 	game.getDraw().drawSprite(sprite, (int) x, (int ) y);
-}
-
-
-
-@Override
-public void run() {
-	while(sound != null) {
-		
-	}
-	
 }
 }

@@ -18,7 +18,6 @@ public class Stack extends Canvas implements Runnable {
 	KeyInput key;
 	JFrame frame;
 	Thread thread;
-	boolean running = false;
 	
 	private static BufferedImage img = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
 	public static int[] pixels = ((DataBufferInt) img.getRaster().getDataBuffer()).getData();
@@ -32,7 +31,8 @@ public class Stack extends Canvas implements Runnable {
 	}
 	
 	public void start() {
-		running = true;
+		game.sound = new Thread(game);
+		game.sound.start();
 		thread = new Thread(this);
 		thread.start();
 	}
@@ -43,7 +43,7 @@ public class Stack extends Canvas implements Runnable {
 		double deltaTime = 0;
 		long lastTime = System.nanoTime();
 		long currentTime;
-		while(running)
+		while(thread!=null)
 		{
 			currentTime = System.nanoTime();
 			deltaTime += (currentTime - lastTime) / drawInterval;
@@ -78,8 +78,8 @@ public class Stack extends Canvas implements Runnable {
 			createBufferStrategy(3);
 			return;
 		}
-		game.draw();
 		Graphics2D g2 = (Graphics2D) bs.getDrawGraphics();
+		game.draw();
 		g2.drawImage(img, 0,0,(int) (WIDTH * scale), (int) (HEIGHT * scale),null);
 		game.drawText(g2);
 		

@@ -2,6 +2,7 @@ package sprite;
 
 import java.awt.Color;
 
+import main.Game;
 import main.Stack;
 
 public class Draw {
@@ -22,7 +23,8 @@ public class Draw {
 
 	public void drawBackGround() {
 		for(int i=0;i<pixels.length;i++) {
-			pixels[i] = 0xfff4f4f4;
+			if(!Game.gameOver) pixels[i] = 0xfff4f4f4;
+			else pixels[i] = 0x0;
 		}
 	}
 	

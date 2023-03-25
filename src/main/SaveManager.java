@@ -26,7 +26,6 @@ public class SaveManager {
 	
 	public void save() {
 		
-		
 		for(int i=0;i<Game.objects.size()-1;i++) {
 			if(Game.objects.get(i) != null)
 			{
@@ -36,6 +35,9 @@ public class SaveManager {
 		try {
 			oF = new File(path);
 			oBR = new BufferedWriter(new FileWriter(oF));
+			if(Game.gameOver) {
+				return;
+			}
 			oBR.write(Integer.toString(Game.score) + "\n");
 			for(int i=0;i<Game.objects.size()-1;i++) {
 				oBR.write(Float.toString(saveInfo[i]) + " ");
@@ -53,8 +55,9 @@ public class SaveManager {
 		try {
 			oF = new File(path);
 			oR = new BufferedReader(new FileReader(oF));
-			String line = oR.readLine();
-			Game.score = Integer.parseInt(line)-1;
+			String line = oR.readLine(); if(line == null) return;
+			Game.score = Integer.parseInt(line)-1; 
+			if(Integer.parseInt(line) == 0) return;
 			while((line = oR.readLine()).equals(""));
 			String str[] = line.split(" "); 
 			Game.objects = new ArrayList<GameObject>();
