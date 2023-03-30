@@ -5,8 +5,8 @@ import java.awt.event.KeyListener;
 
 public class KeyInput implements KeyListener {
 
-	public static boolean[] keys = new boolean[100];
-	public static boolean[] lastKeys = new boolean[100];
+	private boolean[] keys = new boolean[100];
+	private boolean[] lastKeys = new boolean[100];
 	
 	public void update() {
 		for(int i =0;i< keys.length;i++) {
@@ -14,12 +14,12 @@ public class KeyInput implements KeyListener {
 		}
 	}
 	
-	public static boolean key(int key) {
+	public boolean key(int key) {
 		return keys[key];
 	}
 	
 	
-	public static boolean keyDown(int key) {
+	public boolean keyDown(int key) {
 		return keys[key] && !lastKeys[key];
 	}
 	

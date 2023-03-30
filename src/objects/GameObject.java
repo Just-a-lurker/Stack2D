@@ -110,9 +110,9 @@ public class GameObject{
 				 speedX *= -1;
 			 }
 			 
-			 if(KeyInput.keyDown(KeyEvent.VK_SPACE)) {
+			 if(game.getStack().getKey().keyDown(KeyEvent.VK_SPACE)) {
 				 this.moving = false;
-				 int prevWidth = Game.objects.get(Game.objects.size() - 2).width;
+				 int prevWidth = game.getObjects().get(game.getObjects().size() - 2).width;
 				 int newWidth = (int) ((prevWidth - Math.abs(Stack.WIDTH / 2 - (x + width / 2))));
 				 if(newWidth < 0) {
 					 game.setGameOver(true);
@@ -127,20 +127,20 @@ public class GameObject{
 			x = Math.round(x);
 		}
 		if(animate) {
-			boolean hasAnimated = false;
+			boolean hasAnimated = true;
 			if(y<newY) {
 				y++;
-				hasAnimated = true;
+				hasAnimated = false;
 			}
 			if(x + width / 2 < Stack.WIDTH/2) {
 				x++;
-				hasAnimated = true;
+				hasAnimated = false;
 			}
 			else if(x + width/2>Stack.WIDTH/2) {
 				x--;
-				hasAnimated = true;
+				hasAnimated = false;
 			}
-			if(!hasAnimated) animate = false;
+			if(hasAnimated) animate = false;
 		}
 	}
 

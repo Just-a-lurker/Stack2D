@@ -10,6 +10,10 @@ import java.util.Properties;
 
 public class GameConfig {
 	Properties properties = new Properties();
+	Game game;
+	public GameConfig(Game game) {
+		this.game = game;
+	}
 	
 	public void saveConfig(String key, int value) {
 			try {
@@ -39,6 +43,6 @@ public class GameConfig {
 	}
 	
 	private void setBest(int best) {
-		Game.bestScore = best;
+		game.setBestScore(best);
 	}
 }

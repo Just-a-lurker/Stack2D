@@ -23,20 +23,61 @@ public class Game implements Runnable{
 	Draw draw;
 	SaveManager save;
 	Random rand = new Random();
-	private Thread sound;
+	Stack stack;
+	Thread sound;
+	GameConfig config = new GameConfig(this);
+	AudioClip place;
+	List<GameObject> objects;
+	Object objectSprite;
 	
-	private AudioClip place;
-	
-	public static List<GameObject> objects;
 	boolean spawnAnother = false;
 	private boolean animate, animating,gameOver;
-	
-	public Object objectSprite;
-	
-	GameConfig config = new GameConfig();
-	public static int bestScore = 0, score;
+	private int bestScore = 0, score;
 	
 	
+	
+	public int getBestScore() {
+		return bestScore;
+	}
+
+
+
+	public void setBestScore(int bestScore) {
+		this.bestScore = bestScore;
+	}
+
+
+
+	public int getScore() {
+		return score;
+	}
+
+
+
+	public void setScore(int score) {
+		this.score = score;
+	}
+
+
+
+	public List<GameObject> getObjects() {
+		return objects;
+	}
+
+
+
+	public void setObjects(List<GameObject> objects) {
+		this.objects = objects;
+	}
+
+
+
+	public Stack getStack() {
+		return stack;
+	}
+
+
+
 	public Draw getDraw() {
 		return draw;
 	}
@@ -91,12 +132,15 @@ public class Game implements Runnable{
 
 
 
-	public Game() {
+	public Game(Stack stack) {
+		this.stack = stack;
 		try {
 			place = Applet.newAudioClip(new URL("file","","data/place.wav"));
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}
+		place.play();
+		place.stop();
 		save = new SaveManager("save.txt",this);
 		config.loadConfig("config.xml");
 		start();
@@ -124,13 +168,14 @@ public class Game implements Runnable{
 	
 	public void update() {
 		if(gameOver) {
-			if(KeyInput.key(KeyEvent.VK_R)) {
+			save.save();
+			if(stack.getKey().keyDown(KeyEvent.VK_R)) {
 				start();
 			}
 			return;
 		}
 		
-		if(KeyInput.keyDown(KeyEvent.VK_R)) start();
+		if(stack.getKey().keyDown(KeyEvent.VK_R)) start();
 		
 		for(int i=0;i< objects.size();i++) {
 			objects.get(i).update();
@@ -172,8 +217,8 @@ public class Game implements Runnable{
 			objects.get(i).draw();
 		}
 		
-		for(int i = 0;i<Stack.pixels.length;i++) {
-			Stack.pixels[i] = draw.getPixels()[i];
+		for(int i = 0;i<stack.getPixels().length;i++) {
+			stack.setPixels(i,draw.getPixels()[i]);
 		}
 	}
 	
@@ -182,8 +227,10 @@ public class Game implements Runnable{
 			g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 			String s = "Score : " + score;
 			int w = g2.getFontMetrics().stringWidth(s)/2;
-			String best = "Best score : " + Game.bestScore;
+			String best = "Best score : " + bestScore;
 			int bw = g2.getFontMetrics().stringWidth(best)/2;
+			String newBest = "New Best score : " + score;
+			int nbw = g2.getFontMetrics().stringWidth(newBest)/2;
 			String go = "Game Over";
 			int gow = g2.getFontMetrics().stringWidth(go)/2;
 			String r = "Press r to restart";
@@ -194,9 +241,14 @@ public class Game implements Runnable{
 		else {
 			g2.setColor(Color.white);
 			g2.drawString(go, Stack.WIDTH * Stack.scale / 2 - gow, Stack.HEIGHT*Stack.scale / 2 - 20);
-			g2.drawString(s, Stack.WIDTH * Stack.scale / 2 - w, Stack.HEIGHT*Stack.scale / 2);
-			g2.drawString(best, Stack.WIDTH * Stack.scale / 2 - bw, Stack.HEIGHT*Stack.scale / 2 + 20);
 			g2.drawString(r, Stack.WIDTH * Stack.scale / 2 - rw, Stack.HEIGHT*Stack.scale / 2 + 40);
+			if(score < bestScore) {
+				g2.drawString(s, Stack.WIDTH * Stack.scale / 2 - w, Stack.HEIGHT*Stack.scale / 2);
+				g2.drawString(best, Stack.WIDTH * Stack.scale / 2 - bw, Stack.HEIGHT*Stack.scale / 2 + 20);
+			}
+			else {
+				g2.drawString(newBest, Stack.WIDTH * Stack.scale / 2 - nbw, Stack.HEIGHT*Stack.scale / 2);
+			}
 		}
 		
 	}
@@ -204,15 +256,18 @@ public class Game implements Runnable{
 	@Override
 	public void run() {
 		while(sound!=null) {
-			if(KeyInput.keyDown(KeyEvent.VK_SPACE) && !gameOver && !animating) place.play();
-//			try {
-//				Thread.sleep(0);
-//			} catch (InterruptedException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-		Thread.yield();
-			
+			if(stack.getKey().keyDown(KeyEvent.VK_SPACE) && !gameOver && !animating) place.play();
+			try {
+				Thread.sleep(0);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		try {
+			sound.join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
 		}
 		}
 }

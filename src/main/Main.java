@@ -13,7 +13,6 @@ public class Main {
 		s.frame.setTitle("Stack");
 		s.frame.add(s);
 		s.frame.pack();
-		s.setBackground(Color.black);
 		s.frame.setVisible(true);
 		s.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		s.frame.setLocationRelativeTo(null);

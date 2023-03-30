@@ -32,19 +32,19 @@ public class Draw {
 		}
 	}
 	
-	public void drawObject(Object s, int xp, int yp) {
-		if(xp< -s.getWidth() || yp< -s.getHeight() || xp >=width || yp>= height) return;
+	public void drawObject(Object o, int xPos, int yPoa) {
+		if(xPos< -o.getWidth() || yPoa< -o.getHeight() || xPos >=width || yPoa>= height) return;
 
-		for(int y=0;y<s.getHeight();y++) {
+		for(int y=0;y<o.getHeight();y++) {
 			
-			int y1 = y + yp;
+			int y1 = y + yPoa;
 			if(y1 >= height || y1< 0) continue;
 			
-			for(int x=0;x<s.getWidth();x++) {
-				int x1 = x + xp;
+			for(int x=0;x<o.getWidth();x++) {
+				int x1 = x + xPos;
 				if(x1 >= width || x1< 0) continue;
 				
-				int color = s.getPixels()[x+y*s.getWidth()];
+				int color = o.getPixels()[x+y*o.getWidth()];
 				if(color == 0xffff00ff) continue;
 				pixels[x1 + y1 * width] = color;
 			}

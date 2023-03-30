@@ -19,22 +19,37 @@ public class Stack extends Canvas implements Runnable {
 	JFrame frame;
 	Thread thread;
 	
-	private static BufferedImage img = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
-	//public static int[] pixels = ((DataBufferInt) img.getRaster().getDataBuffer()).getData();
+	private BufferedImage img = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
+	private int[] pixels = ((DataBufferInt) img.getRaster().getDataBuffer()).getData();
 	
+	
+	public int[] getPixels() {
+		return pixels;
+	}
+
+	public void setPixels(int i, int value) {
+		this.pixels[i] = value;
+	}
+	
+	
+
+	public KeyInput getKey() {
+		return key;
+	}
+
 	public Stack() {
 		setPreferredSize(new Dimension((int) (WIDTH * scale), (int) (HEIGHT * scale)));
 		frame = new JFrame();
-		game = new Game();
+		game = new Game(this);
 		key = new KeyInput();
 		addKeyListener(key);
 	}
 	
 	public void start() {
-		thread = new Thread(this);
-		thread.start();
 		game.setSound(new Thread(game));
 		game.getSound().start();
+		thread = new Thread(this);
+		thread.start();
 	}
 	
 	@Override
@@ -55,17 +70,14 @@ public class Stack extends Canvas implements Runnable {
 			}
 			draw();
 		}
-		stop();
-		
-	}
-	
-	public void stop() {
 		try {
 			thread.join();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+		
 	}
+	
 	
 	public void update() {
 		game.update();
