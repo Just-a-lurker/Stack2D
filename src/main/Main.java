@@ -8,14 +8,15 @@ import javax.swing.JFrame;
 public class Main {
 
 	public static void main(String[] args) {
+		JFrame frame = new JFrame();
 		Stack s = new Stack();
-		s.frame.setResizable(false);
-		s.frame.setTitle("Stack");
-		s.frame.add(s);
-		s.frame.pack();
-		s.frame.setVisible(true);
-		s.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		s.frame.setLocationRelativeTo(null);
+		frame.setResizable(false);
+		frame.setTitle("Stack");
+		frame.add(s);
+		frame.pack();
+		frame.setVisible(true);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setLocationRelativeTo(null);
 		s.start();
 	}
 

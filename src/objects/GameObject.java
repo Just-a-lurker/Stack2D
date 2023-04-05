@@ -2,6 +2,8 @@ package objects;
 
 import java.applet.Applet;
 import java.applet.AudioClip;
+import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -144,7 +146,12 @@ public class GameObject{
 		}
 	}
 
-public void draw() {
-	game.getDraw().drawObject(object, (int) x, (int ) y);
+public void draw(Graphics2D g2) {
+	if(!Stack.darkMode || game.isGameOver()) {
+		g2.setColor(Color.black);
+	}
+	else g2.setColor(Color.white);
+	
+	g2.fillRect((int)x * 2,(int) y * 2, width *2, height*2);
 }
 }

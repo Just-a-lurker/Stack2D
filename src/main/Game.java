@@ -9,33 +9,40 @@ import java.awt.RenderingHints;
 import java.awt.event.KeyEvent;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
+import java.sql.Date;
+import java.sql.SQLException;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
-import graphic.Draw;
 import graphic.Object;
 import objects.GameObject;
 
 
+@SuppressWarnings("removal")
 public class Game implements Runnable{
 	
-	Draw draw;
 	SaveManager save;
 	Random rand = new Random();
 	Stack stack;
 	Thread sound;
-	GameConfig config = new GameConfig(this);
 	AudioClip place;
 	List<GameObject> objects;
-	Object objectSprite;
+	Object object;
+	SQLManager sqlM;
+	Date date;
 	
 	boolean spawnAnother = false;
-	private boolean animate, animating,gameOver;
+	private boolean animate, animating,gameOver,saveFlag = false;
 	private int bestScore = 0, score;
 	
 	
-	
+	public void setDate(Date date) {
+		this.date = date;
+	}
+
+
+
 	public int getBestScore() {
 		return bestScore;
 	}
@@ -76,12 +83,6 @@ public class Game implements Runnable{
 		return stack;
 	}
 
-
-
-	public Draw getDraw() {
-		return draw;
-	}
-	
 	
 
 	public Thread getSound() {
@@ -139,41 +140,59 @@ public class Game implements Runnable{
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}
+		sqlM = new SQLManager("config.txt", this);
 		place.play();
 		place.stop();
 		save = new SaveManager("save.txt",this);
-		config.loadConfig("config.xml");
 		start();
 		save.load();
-		draw = new Draw(this);
+		saveFlag = false;
 	}
 	
 	public void start() {
-		objectSprite = new Object(100, 29, 0);
-		objects = new ArrayList<GameObject>();
-		objects.add(new GameObject(Stack.WIDTH / 2 - objectSprite.getWidth()/2, Stack.HEIGHT - 30, objectSprite, false, this));
-		objects.add(new GameObject(Stack.WIDTH / 2 - objectSprite.getWidth()/2, Stack.HEIGHT - 30*2, objectSprite, false, this));
-		objects.add(new GameObject(Stack.WIDTH / 2 - objectSprite.getWidth()/2, Stack.HEIGHT - 30*3, objectSprite, false, this));
+		object = new Object(100, 29, 0);
+		objects = new LinkedList<GameObject>();
+		objects.add(new GameObject(Stack.WIDTH / 2 - object.getWidth()/2, Stack.HEIGHT - 30, object, false, this));
+		objects.add(new GameObject(Stack.WIDTH / 2 - object.getWidth()/2, Stack.HEIGHT - 30*2, object, false, this));
+		objects.add(new GameObject(Stack.WIDTH / 2 - object.getWidth()/2, Stack.HEIGHT - 30*3, object, false, this));
 		spawnAnother = true;
 		gameOver = false;
 		animate = false;
 		animating = false;
-		
-		if(score > bestScore) {
-			bestScore = score;
-			config.saveConfig("best", bestScore);
-		}
 		score = -1;
+		try {
+			sqlM.loadSQL();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void update() {
 		if(gameOver) {
-			save.save();
+			if(score > bestScore) {
+				bestScore = score;
+			}
+			if(!saveFlag) {
+				save.save();
+			try {
+				sqlM.saveSQL();
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 			if(stack.getKey().keyDown(KeyEvent.VK_R)) {
 				start();
 			}
+			saveFlag = true;
 			return;
+			}
+			
 		}
+		
+		if(stack.getKey().keyDown(KeyEvent.VK_D)) Stack.darkMode = !Stack.darkMode;
 		
 		if(stack.getKey().keyDown(KeyEvent.VK_R)) start();
 		
@@ -185,9 +204,9 @@ public class Game implements Runnable{
 		
 		if(spawnAnother) {
 			if(!animating) {
-				score++;
-				objectSprite = new Object(objects.get(objects.size()-1).getWidth(), 29, 0);
-				objects.add(new GameObject(rand.nextInt(Stack.WIDTH) - objectSprite.getWidth(), Stack.HEIGHT - 30*4, objectSprite, true, this));
+				if(!gameOver) score++;
+				object = new Object(objects.get(objects.size()-1).getWidth(), 29, 0);
+				objects.add(new GameObject(rand.nextInt(Stack.WIDTH) - object.getWidth(), Stack.HEIGHT - 30*4, object, true, this));
 				spawnAnother = false;
 			}
 			else {
@@ -210,16 +229,11 @@ public class Game implements Runnable{
 		}
 	}
 	
-	public void draw() {
-		draw.drawBackGround();
-		
+	public void draw(Graphics2D g2) {
 		for(int i=0;i< objects.size();i++) {
-			objects.get(i).draw();
+			objects.get(i).draw(g2);
 		}
-		
-		for(int i = 0;i<stack.getPixels().length;i++) {
-			stack.setPixels(i,draw.getPixels()[i]);
-		}
+	
 	}
 	
 	public void drawText(Graphics2D g2) {
@@ -227,7 +241,7 @@ public class Game implements Runnable{
 			g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 			String s = "Score : " + score;
 			int w = g2.getFontMetrics().stringWidth(s)/2;
-			String best = "Best score : " + bestScore;
+			String best = "Best score : " + bestScore + " since " + date;
 			int bw = g2.getFontMetrics().stringWidth(best)/2;
 			String newBest = "New Best score : " + score;
 			int nbw = g2.getFontMetrics().stringWidth(newBest)/2;
@@ -236,6 +250,7 @@ public class Game implements Runnable{
 			String r = "Press r to restart";
 			int rw = g2.getFontMetrics().stringWidth(r)/2;
 		if(!gameOver) {
+			g2.drawString(Integer.toString(Stack.fps), 1, 18);
 			g2.drawString(s, Stack.WIDTH * Stack.scale / 2 - w, 80);
 		}
 		else {
@@ -260,7 +275,6 @@ public class Game implements Runnable{
 			try {
 				Thread.sleep(0);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}

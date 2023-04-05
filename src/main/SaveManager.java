@@ -62,7 +62,7 @@ public class SaveManager {
 			String str[] = line.split(" "); 
 			game.setObjects(new ArrayList<GameObject>());
 			for(int i=0;i<str.length;i++) {
-				game.getObjects().add(new GameObject(Stack.WIDTH / 2 - game.objectSprite.getWidth()/2, Stack.HEIGHT - 30*(i+1), new Object((int) Float.parseFloat(str[i]), 29, 0), false, game));
+				game.getObjects().add(new GameObject(Stack.WIDTH / 2 - game.object.getWidth()/2, Stack.HEIGHT - 30*(i+1), new Object((int) Float.parseFloat(str[i]), 29, 0), false, game));
 				while(game.getObjects().get(i).getX() +game.getObjects().get(i).getWidth()/2 != Stack.WIDTH/2) {
 					if(game.getObjects().get(i).getX() + game.getObjects().get(i).getWidth()/2 / 2 < Stack.WIDTH/2) {
 						game.getObjects().get(i).setX(game.getObjects().get(i).getX() + 1);

@@ -1,36 +1,23 @@
 package main;
 
-import java.awt.Canvas;
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.image.BufferStrategy;
-import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferInt;
+import java.util.Timer;
 
-import javax.swing.JFrame;
+import javax.swing.JPanel;
 
-public class Stack extends Canvas implements Runnable {
+public class Stack extends JPanel implements Runnable {
 
 	public static final int WIDTH = 250, HEIGHT = 300;
 	public static float scale = 2;
+	public static boolean darkMode = false;
+	public static int fps = 0;
 	
 	Game game;
 	KeyInput key;
-	JFrame frame;
 	Thread thread;
-	
-	private BufferedImage img = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
-	private int[] pixels = ((DataBufferInt) img.getRaster().getDataBuffer()).getData();
-	
-	
-	public int[] getPixels() {
-		return pixels;
-	}
-
-	public void setPixels(int i, int value) {
-		this.pixels[i] = value;
-	}
-	
 	
 
 	public KeyInput getKey() {
@@ -39,10 +26,11 @@ public class Stack extends Canvas implements Runnable {
 
 	public Stack() {
 		setPreferredSize(new Dimension((int) (WIDTH * scale), (int) (HEIGHT * scale)));
-		frame = new JFrame();
 		game = new Game(this);
 		key = new KeyInput();
-		addKeyListener(key);
+		this.addKeyListener(key);
+		this.setFocusable(true);
+		this.setDoubleBuffered(true);
 	}
 	
 	public void start() {
@@ -54,21 +42,32 @@ public class Stack extends Canvas implements Runnable {
 	
 	@Override
 	public void run() {
-		double drawInterval = 1000000000/60;
+		double drawInterval = 1000000000/90;
 		double deltaTime = 0;
 		long lastTime = System.nanoTime();
 		long currentTime;
+		long timer = 0;
+		int drawCount = 0;
 		while(thread!=null)
 		{
 			currentTime = System.nanoTime();
 			deltaTime += (currentTime - lastTime) / drawInterval;
+			timer += (currentTime - lastTime);
 			lastTime = currentTime;
+			
 			if(deltaTime >= 1)
 			{
 				update();
+				repaint();
 				deltaTime--;
+				drawCount++;
 			}
-			draw();
+			if(timer > 1000000000) {
+				fps = drawCount;
+				drawCount = 0;
+				timer = 0;
+			}
+			
 		}
 		try {
 			thread.join();
@@ -80,23 +79,22 @@ public class Stack extends Canvas implements Runnable {
 	
 	
 	public void update() {
+		if(game.isGameOver() || darkMode) setBackground(Color.black);
+		else {
+			if(!darkMode)
+			setBackground(Color.white);
+		}
 		game.update();
 		key.update();
 	}
 	
-	public void draw() {
-		BufferStrategy bs = getBufferStrategy();
-		if(bs == null) {
-			createBufferStrategy(3);
-			return;
-		}
-		Graphics2D g2 = (Graphics2D) bs.getDrawGraphics();
-		game.draw();
-		g2.drawImage(img, 0,0,(int) (WIDTH * scale), (int) (HEIGHT * scale),null);
+	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		Graphics2D g2 = (Graphics2D) g;
+		game.draw(g2);
 		game.drawText(g2);
 		
 		g2.dispose();
-		bs.show();
 	}
 
 }

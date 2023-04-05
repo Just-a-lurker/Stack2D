@@ -14,20 +14,13 @@ public class KeyInput implements KeyListener {
 		}
 	}
 	
-	public boolean key(int key) {
-		return keys[key];
-	}
-	
 	
 	public boolean keyDown(int key) {
 		return keys[key] && !lastKeys[key];
 	}
 	
 	@Override
-	public void keyTyped(KeyEvent e) {
-		
-		
-	}
+	public void keyTyped(KeyEvent e) {}
 
 	@Override
 	public void keyPressed(KeyEvent e) {

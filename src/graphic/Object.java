@@ -2,19 +2,6 @@ package graphic;
 
 public class Object {
 	private int width,height;
-	private int[] pixels;
-	
-	
-	
-	public int[] getPixels() {
-		return pixels;
-	}
-
-
-	public void setPixels(int[] pixels) {
-		this.pixels = pixels;
-	}
-
 
 	public int getWidth() {
 		return width;
@@ -39,10 +26,6 @@ public class Object {
 	public Object(int width, int height, int color) {
 		this.width = width;
 		this.height = height;
-		pixels = new int[width*height];
-		for(int i=0;i<pixels.length;i++) {
-			pixels[i] = color;
-		}
 	}
 	
 	
