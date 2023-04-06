@@ -146,7 +146,6 @@ public class Game implements Runnable{
 		save = new SaveManager("save.txt",this);
 		start();
 		save.load();
-		saveFlag = false;
 	}
 	
 	public void start() {
@@ -167,6 +166,7 @@ public class Game implements Runnable{
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		saveFlag = false;
 	}
 	
 	public void update() {
