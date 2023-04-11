@@ -14,7 +14,7 @@ import objects.GameObject;
 public class SQLManager {
 	static final String DRIVER_CLASS = "com.mysql.cj.jdbc.Driver";
 	static String DB_SUBURL = null;
-	static String DB_URL = DB_SUBURL + "Highscore";
+	static String DB_URL = null;
 	static String USER = null;
 	static String PASS = null;
 	File oF;
@@ -36,6 +36,7 @@ public class SQLManager {
 		oR = new BufferedReader(new FileReader(oF));
 		String line = oR.readLine();
 		DB_SUBURL = line;
+		DB_URL = DB_SUBURL + "Highscore";
 		String line2 = oR.readLine();
 		USER = line2;
 		String line3 = oR.readLine();
@@ -47,25 +48,17 @@ public class SQLManager {
 		e.printStackTrace();
 	}
 	try {
-	System.out.println("STEP 1: Register JDBC driver");
-	Class.forName(DRIVER_CLASS);
-
-	System.out.println("STEP 2: Open a connection");
-	conn = DriverManager.getConnection(DB_URL, USER, PASS);
-
-	System.out.println("STEP 3: Execute a query");
-	stmt = conn.createStatement();
-	ResultSet rs = stmt.executeQuery("SELECT * FROM Highscore");
-	System.out.println("STEP 4: Extract data from result set");
-	while (rs.next()) 
-	{	
-	game.setBestScore(rs.getInt(1));
-	check = rs.getInt(1);
-	game.setDate(rs.getDate(2));
-	System.out.print("Highscore: " + rs.getInt(1) + "  " + rs.getDate(2));
-	System.out.println("\n");
-	}
-	rs.close();
+		Class.forName(DRIVER_CLASS);
+		conn = DriverManager.getConnection(DB_URL, USER, PASS);
+		stmt = conn.createStatement();
+		ResultSet rs = stmt.executeQuery("SELECT * FROM Highscore");
+		while (rs.next()) 
+		{	
+			game.setBestScore(rs.getInt(1));
+			check = rs.getInt(1);
+			game.setDate(rs.getDate(2));
+		}
+		rs.close();
 	}
 	catch (SQLException e) {
 		conn = DriverManager.getConnection(DB_SUBURL, USER, PASS);
@@ -79,15 +72,13 @@ public class SQLManager {
                    " Time date" + 
                    	")"; 
          stmt.executeUpdate(sql);
-	}
+		}
 	finally {
-	System.out.println("STEP 5: Close connection");
-	if (stmt != null)
-	stmt.close();
-	if (conn != null)
-	conn.close();
-	} 
-	System.out.println("Done!");
+			if (stmt != null)
+				stmt.close();
+			if (conn != null)
+				conn.close();
+		} 
 	}
 	
 	public void saveSQL()throws ClassNotFoundException, SQLException {
@@ -95,28 +86,22 @@ public class SQLManager {
 		Statement stmt = null;
 		int highScore = game.getBestScore();
 		try {
-		System.out.println("STEP 1: Register JDBC driver");
-		Class.forName(DRIVER_CLASS);
-
-		System.out.println("STEP 2: Open a connection");
-		conn = DriverManager.getConnection(DB_URL, USER, PASS);
-
-		System.out.println("STEP 3: save data to sql");
-		if(check > game.getScore()) return;
-		stmt = conn.createStatement();
-		stmt.execute("DELETE FROM highscore");
-		PreparedStatement pstmt = conn.prepareStatement("INSERT INTO highscore(Highscore , Time) VALUES (?,?)");
-		pstmt.setInt(1, highScore);
-		pstmt.setDate(2, java.sql.Date.valueOf(java.time.LocalDate.now()));
-		pstmt.executeUpdate();
-		pstmt.close();
-		} finally {
-		System.out.println("STEP 4: Close connection");
-		if (stmt != null)
-		stmt.close();
-		if (conn != null)
-		conn.close();
+			Class.forName(DRIVER_CLASS);
+			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			if(check > game.getScore()) return;
+			stmt = conn.createStatement();
+			stmt.execute("DELETE FROM highscore");
+			PreparedStatement pstmt = conn.prepareStatement("INSERT INTO highscore(Highscore , Time) VALUES (?,?)");
+			pstmt.setInt(1, highScore);
+			pstmt.setDate(2, java.sql.Date.valueOf(java.time.LocalDate.now()));
+			pstmt.executeUpdate();
+			pstmt.close();
 		} 
-		System.out.println("Done!");
+		finally {
+			if (stmt != null)
+				stmt.close();
+			if (conn != null)
+				conn.close();
+		} 
 	}
 }
