@@ -70,11 +70,11 @@ public class SQLManager {
 	catch (SQLException e) {
 		conn = DriverManager.getConnection(DB_SUBURL, USER, PASS);
 		stmt = conn.createStatement();
-	    stmt.executeUpdate("CREATE DATABASE highscore");
+	    stmt.executeUpdate("CREATE DATABASE IF NOT EXISTS highscore");
 	    DB_URL = DB_SUBURL + "Highscore";
 	    conn = DriverManager.getConnection(DB_URL, USER, PASS);
 	    stmt = conn.createStatement();
-	    String sql = "CREATE TABLE Highscore " +
+	    String sql = "CREATE TABLE IF NOT EXISTS Highscore " +
                    "(Highscore INTEGER, " +
                    " Time date" + 
                    	")"; 
