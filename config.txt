@@ -1,2 +1,2 @@
-jdbc:mysql://localhost/Highscore
+jdbc:mysql://localhost:3306/
 root

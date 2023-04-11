@@ -13,7 +13,8 @@ import objects.GameObject;
 
 public class SQLManager {
 	static final String DRIVER_CLASS = "com.mysql.cj.jdbc.Driver";
-	static String DB_URL = null;
+	static String DB_SUBURL = null;
+	static String DB_URL = DB_SUBURL + "Highscore";
 	static String USER = null;
 	static String PASS = null;
 	File oF;
@@ -34,12 +35,12 @@ public class SQLManager {
 		oF = new File(path);
 		oR = new BufferedReader(new FileReader(oF));
 		String line = oR.readLine();
-		this.DB_URL = line;
+		DB_SUBURL = line;
 		String line2 = oR.readLine();
-		this.USER = line2;
+		USER = line2;
 		String line3 = oR.readLine();
-		if(line3 == null) this.PASS = "";
-		else this.PASS = line3;
+		if(line3 == null) PASS = "";
+		else PASS = line3;
 		oR.close();
 	} catch (IOException e) {
 		// TODO Auto-generated catch block
@@ -65,7 +66,21 @@ public class SQLManager {
 	System.out.println("\n");
 	}
 	rs.close();
-	} finally {
+	}
+	catch (SQLException e) {
+		conn = DriverManager.getConnection(DB_SUBURL, USER, PASS);
+		stmt = conn.createStatement();
+	    stmt.executeUpdate("CREATE DATABASE highscore");
+	    DB_URL = DB_SUBURL + "Highscore";
+	    conn = DriverManager.getConnection(DB_URL, USER, PASS);
+	    stmt = conn.createStatement();
+	    String sql = "CREATE TABLE Highscore " +
+                   "(Highscore INTEGER, " +
+                   " Time date" + 
+                   	")"; 
+         stmt.executeUpdate(sql);
+	}
+	finally {
 	System.out.println("STEP 5: Close connection");
 	if (stmt != null)
 	stmt.close();
