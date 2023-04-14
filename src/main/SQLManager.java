@@ -16,14 +16,13 @@ public class SQLManager {
 	BufferedReader oR;
 	String path;
 	Game game;
-	private int check=0;
 	
 	public SQLManager(String path, Game game) {
 		this.path = path;
 		this.game = game;
 	}
 	
-	public void loadSQL() throws ClassNotFoundException, SQLException {
+	public void loadSQL() throws ClassNotFoundException, SQLException{
 	Connection conn = null;
 	Statement stmt = null;
 	try {
@@ -39,7 +38,6 @@ public class SQLManager {
 		else PASS = line3;
 		oR.close();
 	} catch (IOException e) {
-		// TODO Auto-generated catch block
 		e.printStackTrace();
 	}
 	try {
@@ -50,24 +48,13 @@ public class SQLManager {
 		while (rs.next()) 
 		{	
 			game.setBestScore(rs.getInt(1));
-			check = rs.getInt(1);
 			game.setDate(rs.getDate(2));
 		}
 		rs.close();
 	}
-	catch (SQLException e) {
-		conn = DriverManager.getConnection(DB_SUBURL, USER, PASS);
-		stmt = conn.createStatement();
-	    stmt.executeUpdate("CREATE DATABASE IF NOT EXISTS highscore");
-	    DB_URL = DB_SUBURL + "Highscore";
-	    conn = DriverManager.getConnection(DB_URL, USER, PASS);
-	    stmt = conn.createStatement();
-	    String sql = "CREATE TABLE IF NOT EXISTS Highscore " +
-                   "(Highscore INTEGER, " +
-                   " Time date" + 
-                   	")"; 
-         stmt.executeUpdate(sql);
-		}
+	catch (SQLSyntaxErrorException e) {
+		createNewDB();
+	}
 	finally {
 			if (stmt != null)
 				stmt.close();
@@ -79,15 +66,13 @@ public class SQLManager {
 	public void saveSQL()throws ClassNotFoundException, SQLException {
 		Connection conn = null;
 		Statement stmt = null;
-		int highScore = game.getBestScore();
 		try {
 			Class.forName(DRIVER_CLASS);
 			conn = DriverManager.getConnection(DB_URL, USER, PASS);
-			if(check > game.getScore()) return;
 			stmt = conn.createStatement();
 			stmt.execute("DELETE FROM highscore");
 			PreparedStatement pstmt = conn.prepareStatement("INSERT INTO highscore(Highscore , Time) VALUES (?,?)");
-			pstmt.setInt(1, highScore);
+			pstmt.setInt(1, game.getBestScore());
 			pstmt.setDate(2, java.sql.Date.valueOf(java.time.LocalDate.now()));
 			pstmt.executeUpdate();
 			pstmt.close();
@@ -98,5 +83,21 @@ public class SQLManager {
 			if (conn != null)
 				conn.close();
 		} 
+	}
+	
+	private void createNewDB() throws SQLException {
+		Connection conn = null;
+		Statement stmt = null;
+		conn = DriverManager.getConnection(DB_SUBURL, USER, PASS);
+		stmt = conn.createStatement();
+		stmt.executeUpdate("CREATE DATABASE IF NOT EXISTS highscore");
+		DB_URL = DB_SUBURL + "Highscore";
+		conn = DriverManager.getConnection(DB_URL, USER, PASS);
+		stmt = conn.createStatement();
+		String sql = "CREATE TABLE IF NOT EXISTS Highscore " +
+                   "(Highscore INTEGER, " +
+                   " Time date" + 
+                   	")"; 
+		stmt.executeUpdate(sql);
 	}
 }

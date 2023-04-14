@@ -9,6 +9,7 @@ import javax.swing.JPanel;
 
 public class Stack extends JPanel implements Runnable {
 
+	private static final long serialVersionUID = 4642014212666320833L;
 	public static final int WIDTH = 250, HEIGHT = 300;
 	public static float scale = 2;
 	public static boolean darkMode = false;
