@@ -81,8 +81,7 @@ public class Stack extends JPanel implements Runnable {
 	public void update() {
 		if(game.isGameOver() || darkMode) setBackground(Color.black);
 		else {
-			if(!darkMode)
-			setBackground(Color.white);
+			if(!darkMode) setBackground(Color.white);
 		}
 		game.update();
 		key.update();

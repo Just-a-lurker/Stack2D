@@ -8,8 +8,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import graphic.Object;
 import objects.GameObject;
+import objects.Object;
 
 public class SaveManager {
 	float[] saveInfo =new float [10];

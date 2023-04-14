@@ -1,4 +1,4 @@
-package graphic;
+package objects;
 
 public class Object {
 	private int width,height;

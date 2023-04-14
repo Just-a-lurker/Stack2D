@@ -5,7 +5,6 @@ import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.util.Random;
 
-import graphic.Object;
 import main.Game;
 import main.Stack;
 
@@ -144,7 +143,7 @@ public void draw(Graphics2D g2) {
 	if(!Stack.darkMode || game.isGameOver()) {
 		g2.setColor(Color.black);
 	}
-	else g2.setColor(Color.white);
+	else g2.setColor(Color.gray);
 	
 	g2.fillRect((int) (x * Stack.scale),(int) (y * Stack.scale),(int) (width *Stack.scale),(int) (height*Stack.scale));
 }
