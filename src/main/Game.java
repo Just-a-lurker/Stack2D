@@ -32,8 +32,7 @@ public class Game implements Runnable{
 	SQLManager sqlM;
 	Date date;
 	
-	boolean spawnAnother = false;
-	private boolean animate, animating,gameOver,saveFlag = false;
+	private boolean animate, animating,gameOver,endGame = false,spawnAnother = false;
 	private int bestScore = 0, score;
 	
 	
@@ -166,14 +165,14 @@ public class Game implements Runnable{
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		saveFlag = false;
+		endGame = false;
 	}
 	
 	public void update() {
 		if(gameOver) {
-			if(score > bestScore) {
-				bestScore = score;
-				if(!saveFlag) {
+			if(!endGame) {
+				if(score > bestScore) {
+					bestScore = score;
 					try {
 						sqlM.saveSQL();
 					} catch (ClassNotFoundException e) {
@@ -182,16 +181,12 @@ public class Game implements Runnable{
 						e.printStackTrace();
 					}
 				}
-				
-			}
-			if(!saveFlag) {
 				save.save();
-				saveFlag = true;
+				endGame = true;
 			}
 			if(stack.getKey().keyDown(KeyEvent.VK_R)) {
 				start();
 			}
-			
 			return;
 		}
 		
