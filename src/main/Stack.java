@@ -14,6 +14,7 @@ public class Stack extends JPanel implements Runnable {
 	public static float scale = 2;
 	public static boolean darkMode = false;
 	public static int fps = 0;
+	public static int FPS = 60;
 	
 	Game game;
 	KeyInput key;
@@ -42,7 +43,7 @@ public class Stack extends JPanel implements Runnable {
 	
 	@Override
 	public void run() {
-		double drawInterval = 1000000000/90;
+		double drawInterval = 1000000000/FPS;
 		double deltaTime = 0;
 		long lastTime = System.nanoTime();
 		long currentTime;
