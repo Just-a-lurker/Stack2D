@@ -1,17 +1,12 @@
 package objects;
 
-import java.applet.Applet;
-import java.applet.AudioClip;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Random;
 
 import graphic.Object;
 import main.Game;
-import main.KeyInput;
 import main.Stack;
 
 public class GameObject{
@@ -24,7 +19,6 @@ public class GameObject{
 	
 	Random rand = new Random();
 
-	@SuppressWarnings("deprecation")
 	public GameObject(float x, float y, Object object, boolean moving, Game game) {
 		this.x = x;
 		this.y = y;
@@ -152,6 +146,6 @@ public void draw(Graphics2D g2) {
 	}
 	else g2.setColor(Color.white);
 	
-	g2.fillRect((int)x * 2,(int) y * 2, width *2, height*2);
+	g2.fillRect((int) (x * Stack.scale),(int) (y * Stack.scale),(int) (width *Stack.scale),(int) (height*Stack.scale));
 }
 }

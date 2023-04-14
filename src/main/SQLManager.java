@@ -1,15 +1,10 @@
 package main;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.*;
-import java.util.ArrayList;
-
-import graphic.Object;
-import objects.GameObject;
 
 public class SQLManager {
 	static final String DRIVER_CLASS = "com.mysql.cj.jdbc.Driver";

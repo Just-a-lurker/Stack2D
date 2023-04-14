@@ -173,23 +173,26 @@ public class Game implements Runnable{
 		if(gameOver) {
 			if(score > bestScore) {
 				bestScore = score;
+				if(!saveFlag) {
+					try {
+						sqlM.saveSQL();
+					} catch (ClassNotFoundException e) {
+						e.printStackTrace();
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+				}
+				
 			}
 			if(!saveFlag) {
 				save.save();
-			try {
-				sqlM.saveSQL();
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
-			} catch (SQLException e) {
-				e.printStackTrace();
+				saveFlag = true;
 			}
 			if(stack.getKey().keyDown(KeyEvent.VK_R)) {
 				start();
 			}
-			saveFlag = true;
-			return;
-			}
 			
+			return;
 		}
 		
 		if(stack.getKey().keyDown(KeyEvent.VK_D)) Stack.darkMode = !Stack.darkMode;
