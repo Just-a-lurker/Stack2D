@@ -148,7 +148,7 @@ public class Game implements Runnable{
 	}
 	
 	public void start() {
-		object = new Object(100, 29, 0);
+		object = new Object(100, 29);
 		objects = new LinkedList<GameObject>();
 		objects.add(new GameObject(Stack.WIDTH / 2 - object.getWidth()/2, Stack.HEIGHT - 30, object, false, this));
 		objects.add(new GameObject(Stack.WIDTH / 2 - object.getWidth()/2, Stack.HEIGHT - 30*2, object, false, this));
@@ -203,7 +203,7 @@ public class Game implements Runnable{
 		if(spawnAnother) {
 			if(!animating) {
 				if(!gameOver) score++;
-				object = new Object(objects.get(objects.size()-1).getWidth(), 29, 0);
+				object = new Object(objects.get(objects.size()-1).getWidth(), 29);
 				objects.add(new GameObject(rand.nextInt(Stack.WIDTH) - object.getWidth(), Stack.HEIGHT - 30*4, object, true, this));
 				spawnAnother = false;
 			}
@@ -235,6 +235,10 @@ public class Game implements Runnable{
 	}
 	
 	public void drawText(Graphics2D g2) {
+			if(!Stack.darkMode || gameOver) {
+				g2.setColor(Color.black);
+			}
+			else g2.setColor(Color.gray);
 			g2.setFont(new Font("Arial",0,20));
 			g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 			String s = "Score : " + score;

@@ -15,9 +15,17 @@ public class GameObject{
 	Game game;
 	private boolean moving, animate = false;
 	private double speedX = 1 , maxSpeedX = 3;
-	
+	Color color;
 	Random rand = new Random();
-
+	private static final Random random = new Random(0);
+	private static Color createRandomColor() {
+	    int r = random.nextInt(256);
+	    int g = random.nextInt(256);
+	    int b = random.nextInt(256);
+	    Color color = new Color(r, g, b);
+	    return color;
+	}
+	
 	public GameObject(float x, float y, Object object, boolean moving, Game game) {
 		this.x = x;
 		this.y = y;
@@ -29,6 +37,7 @@ public class GameObject{
 		this.game = game;
 		this.speedX = rand.nextDouble() * (maxSpeedX - 1) + 1;
 		if(rand.nextInt(2) == 0) this.speedX *= -1;
+		this.color = createRandomColor();
 	}
 	
 	
@@ -88,7 +97,7 @@ public class GameObject{
 
 
 	public void setWidth(int width) {
-		this.object = new Object(width, height, 0);
+		this.object = new Object(width, height);
 		this.width = width;
 	}
 	
@@ -108,7 +117,7 @@ public class GameObject{
 			 if(game.getStack().getKey().keyDown(KeyEvent.VK_SPACE)) {
 				 this.moving = false;
 				 int prevWidth = game.getObjects().get(game.getObjects().size() - 2).width;
-				 int newWidth = (int) ((prevWidth - Math.abs(Stack.WIDTH / 2 - (x + width / 2))));
+				 int newWidth = (int) ((prevWidth - Math.abs(Stack.WIDTH / 2 - (x + width/2))));
 				 if(newWidth < 0) {
 					 game.setGameOver(true);
 					 return;
@@ -138,13 +147,16 @@ public class GameObject{
 			if(hasAnimated) animate = false;
 		}
 	}
+	
 
 public void draw(Graphics2D g2) {
-	if(!Stack.darkMode || game.isGameOver()) {
-		g2.setColor(Color.black);
-	}
-	else g2.setColor(Color.gray);
-	
+	g2.setColor(color);
 	g2.fillRect((int) (x * Stack.scale),(int) (y * Stack.scale),(int) (width *Stack.scale),(int) (height*Stack.scale));
+	
+//	if(!Stack.darkMode || game.isGameOver()) {
+//		g2.setColor(Color.black);
+//	}
+//	else g2.setColor(Color.gray);
+	
 }
 }

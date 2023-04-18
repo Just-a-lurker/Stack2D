@@ -1,8 +1,11 @@
 package objects;
 
+import java.awt.Color;
+import java.util.Random;
+
 public class Object {
 	private int width,height;
-
+	
 	public int getWidth() {
 		return width;
 	}
@@ -22,8 +25,7 @@ public class Object {
 		this.height = height;
 	}
 
-
-	public Object(int width, int height, int color) {
+	public Object(int width, int height) {
 		this.width = width;
 		this.height = height;
 	}
