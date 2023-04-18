@@ -88,7 +88,6 @@ public class GameObject{
 
 
 	public void setWidth(int width) {
-		this.object = new Object(width, height);
 		this.width = width;
 	}
 	
