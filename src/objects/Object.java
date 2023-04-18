@@ -23,7 +23,7 @@ public class Object {
 	}
 
 
-	public Object(int width, int height, int color) {
+	public Object(int width, int height) {
 		this.width = width;
 		this.height = height;
 	}
