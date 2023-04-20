@@ -13,7 +13,7 @@ public class GameObject{
 	private int width, height;
 	Object object;
 	Game game;
-	private boolean moving, animate = false;
+	private boolean moving, animate = false,powerUp = false;
 	private double speedX = 1 , maxSpeedX = 3;
 	
 	Random rand = new Random();
@@ -33,6 +33,30 @@ public class GameObject{
 	
 	
 	
+	public boolean isPowerUp() {
+		return powerUp;
+	}
+
+
+
+	public void setPowerUp(boolean powerUp) {
+		this.powerUp = powerUp;
+	}
+
+
+
+	public int getHeight() {
+		return height;
+	}
+
+
+
+	public void setHeight(int height) {
+		this.height = height;
+	}
+
+
+
 	public float getX() {
 		return x;
 	}
@@ -108,8 +132,10 @@ public class GameObject{
 				 this.moving = false;
 				 int prevWidth = game.getObjects().get(game.getObjects().size() - 2).width;
 				 int newWidth = (int) ((prevWidth - Math.abs(Stack.WIDTH / 2 - (x + width / 2))));
-				 if(newWidth < 0) {
-					 game.setGameOver(true);
+				 if(game.getObjects().get(game.getObjects().size() - 2).isPowerUp() && newWidth > 0) return;
+				 if(newWidth <= 0 ) {
+					 if(game.getLives() == 0) game.setGameOver(true);
+					 game.setLives(game.getLives() - 1);
 					 return;
 				 }
 				 setWidth(newWidth);
@@ -139,10 +165,19 @@ public class GameObject{
 	}
 
 public void draw(Graphics2D g2) {
-	if(!Stack.darkMode || game.isGameOver()) {
+	if(powerUp == true) 
+	{
+		if(game.isGameOver()) {
+			g2.setColor(Color.black);
+		}
+		else g2.setColor(Color.green);
+	}
+	else if(!Stack.darkMode || game.isGameOver()) {
 		g2.setColor(Color.black);
 	}
+	
 	else g2.setColor(Color.gray);
+	
 	
 	g2.fillRect((int) (x * Stack.scale),(int) (y * Stack.scale),(int) (width *Stack.scale),(int) (height*Stack.scale));
 }

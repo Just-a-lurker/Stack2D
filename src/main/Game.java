@@ -33,12 +33,27 @@ public class Game implements Runnable{
 	Date date;
 	
 	private boolean animate, animating,gameOver,endGame = false,spawnAnother = false;
-	private int bestScore = 0, score;
+	private int bestScore = 0, score, lives = 1;
 	
 	
 	public void setDate(Date date) {
 		this.date = date;
 	}
+
+
+	
+
+	public int getLives() {
+		return lives;
+	}
+
+
+
+
+	public void setLives(int lives) {
+		this.lives = lives;
+	}
+
 
 
 
@@ -158,6 +173,7 @@ public class Game implements Runnable{
 		animate = false;
 		animating = false;
 		score = -1;
+		lives = 1;
 		try {
 			sqlM.loadSQL();
 		} catch (ClassNotFoundException e) {
@@ -192,11 +208,17 @@ public class Game implements Runnable{
 		
 		if(stack.getKey().keyDown(KeyEvent.VK_D)) Stack.darkMode = !Stack.darkMode;
 		
-		if(stack.getKey().keyDown(KeyEvent.VK_R)) start();
+		if(stack.getKey().keyDown(KeyEvent.VK_R)) {
+			lives++;
+			start();
+		}
 		
 		for(int i=0;i< objects.size();i++) {
 			objects.get(i).update();
-			if(objects.get(i).getY() + Stack.HEIGHT >= Stack.HEIGHT * Stack.scale) objects.remove(i);
+			if(objects.get(i).getY() + Stack.HEIGHT >= Stack.HEIGHT * Stack.scale) {
+				objects.remove(i);
+				System.out.println("rem");
+			}
 		}
 		animate = false;
 		
@@ -225,6 +247,11 @@ public class Game implements Runnable{
 				animating = true;
 			}
 		}
+		
+		if(stack.getKey().keyDown(KeyEvent.VK_E)) {
+			objects.get(objects.size()-2).setPowerUp(true);
+			
+		}
 	}
 	
 	public void draw(Graphics2D g2) {
@@ -249,6 +276,7 @@ public class Game implements Runnable{
 			int rw = g2.getFontMetrics().stringWidth(r)/2;
 		if(!gameOver) {
 			g2.drawString(Integer.toString(Stack.fps), 1, 18);
+			g2.drawString(Integer.toString(lives), 1, 40);
 			g2.drawString(s, Stack.WIDTH * Stack.scale / 2 - w, 80);
 		}
 		else {
@@ -269,7 +297,7 @@ public class Game implements Runnable{
 	@Override
 	public void run() {
 		while(sound!=null) {
-			if(stack.getKey().keyDown(KeyEvent.VK_SPACE) && !gameOver && !animating) place.play();
+			if(stack.getKey().keyDown(KeyEvent.VK_SPACE) && !gameOver) place.play();
 			try {
 				Thread.sleep(0);
 			} catch (InterruptedException e) {
