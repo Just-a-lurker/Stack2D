@@ -1,4 +1,8 @@
 # Stack2D
+Introduction:
+A classic stacking game, start with 1 health and you get 1 health whenever restart the game (press r) in the same session, activate power up by pressing e
+to cheat 1 stack (the length remain the same for the stack above the green one provided that 2 stacks touch each other) and press d for darkmode
+
 Requirements:
 1. XAMPP and MySQL
 2. Java 19.0.2 or higher
