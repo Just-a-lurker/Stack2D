@@ -173,7 +173,6 @@ public class Game implements Runnable{
 		animate = false;
 		animating = false;
 		score = -1;
-		lives = 1;
 		try {
 			sqlM.loadSQL();
 		} catch (ClassNotFoundException e) {
@@ -201,6 +200,7 @@ public class Game implements Runnable{
 				endGame = true;
 			}
 			if(stack.getKey().keyDown(KeyEvent.VK_R)) {
+				lives = 1;
 				start();
 			}
 			return;
