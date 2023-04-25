@@ -297,7 +297,7 @@ public class Game implements Runnable{
 	@Override
 	public void run() {
 		while(sound!=null) {
-			if(stack.getKey().keyDown(KeyEvent.VK_SPACE) && !gameOver) place.play();
+			if(stack.getKey().keyDown(KeyEvent.VK_SPACE) && !gameOver &&!animating) place.play();
 			try {
 				Thread.sleep(0);
 			} catch (InterruptedException e) {
