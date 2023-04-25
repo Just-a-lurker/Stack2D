@@ -275,8 +275,8 @@ public class Game implements Runnable{
 			String r = "Press r to restart";
 			int rw = g2.getFontMetrics().stringWidth(r)/2;
 		if(!gameOver) {
-			g2.drawString(Integer.toString(Stack.fps), 1, 18);
-			g2.drawString(Integer.toString(lives), 1, 40);
+			g2.drawString("FPS: " + Integer.toString(Stack.fps), 1, 18);
+			g2.drawString("Lives: " + Integer.toString(lives), 1, 40);
 			g2.drawString(s, Stack.WIDTH * Stack.scale / 2 - w, 80);
 		}
 		else {

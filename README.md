@@ -4,8 +4,8 @@ A classic stacking game, start with 1 health and you get 1 health whenever resta
 to cheat 1 stack (the length remain the same for the stack above the green one provided that 2 stacks touch each other) and press d for darkmode
 
 Requirements:
-1. XAMPP and MySQL
-2. Java 19.0.2 or higher
+1. XAMPP and MySQL (Can be found in https://www.apachefriends.org/download.html)
+2. Java 19.0.2 or higher (Can be founded in https://www.oracle.com/java/technologies/javase/jdk19-archive-downloads.html)
 3. Anything that has 2 core or more
 
 How to set up:
