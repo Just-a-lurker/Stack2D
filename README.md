@@ -8,6 +8,9 @@ Requirements:
 2. Java 19.0.2 or higher (Can be founded in https://www.oracle.com/java/technologies/javase/jdk19-archive-downloads.html)
 3. Anything that has 2 core or more
 
+Download:
+- Get the latest release.
+
 How to set up:
 1. Turn on MySQL in XAMPP
 2. Run Stack.jar with Java Platform SE Binary
