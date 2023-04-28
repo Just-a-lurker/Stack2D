@@ -5,7 +5,7 @@ to cheat 1 stack (the length remain the same for the stack above the green one p
 
 Requirements:
 1. XAMPP and MySQL (Can be found in https://www.apachefriends.org/download.html)
-2. Java 19.0.2 or higher (Can be founded in https://www.oracle.com/java/technologies/javase/jdk19-archive-downloads.html)
+2. Java 19.0.2 or higher (Can be found in https://www.oracle.com/java/technologies/javase/jdk19-archive-downloads.html)
 3. Anything that has 2 core or more
 
 Download:
